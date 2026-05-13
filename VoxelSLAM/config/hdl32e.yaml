@@ -1,0 +1,114 @@
+General:
+  #lid_topic: "/velodyne_points"
+  lid_topic: "/lidar/points"
+  imu_topic: "/imu/data"
+  # 중력 보상된 IMU 데이터 사용 여부
+  gravity_compensated_imu: false
+  # 수동 중력벡터 설정 (중력 보상 모드에서 사용)
+  # 실제 IMU 좌표계에서 측정된 중력벡터 사용
+  manual_gravity_vector: [0, 0, 0]
+  # 저장할 맵의 파일 경로
+  save_path: "/media/yjcho/samsung_ssd/mapping_tool_v2/result/"
+  # 로드할 save_path의 오프라인 맵
+  # 맵 이름 뒤의 숫자는 루프의 임계값
+  # '#'는 맵이 로드되지 않음을 의미
+  previous_map: ""
+  # 이번 실행에서 재생될 백 이름
+  #bagname: "sensors_0905_full_gc"
+  bagname: "sensors_0910_full_nongc_velfromstream"
+  #bagname: "sensors"
+  lidar_type: 6
+  blind: 2.0     # HDL32E 최소 거리 (미터) - 초기화 개선
+  point_filter_num: 1
+  
+  # HDL32E timestamp offset settings
+  enable_hdl32e_timestamp_offset: true   # Enable timestamp offset (convert -0.05~0.05 to 0~0.1)
+  hdl32e_timestamp_offset: 0.05          # Offset value to add to timestamps
+  
+  # HDL32E timing validation settings
+  is_valid_hdl32e_timing: true           # Direct setting for is_valid_hdl32e_timing (true=time-based, false=angle-based)
+  # HDL32E 기본 extrinsic (LiDAR-IMU 간 변환) - tilted LiDAR 테스트용 identity
+  extrinsic_tran: [0.212614,-0.633602, 0.669752]
+  #extrinsic_tran: [0, 0, 0]
+  #extrinsic_rota: [1, 0, 0,
+  #                 0, 1, 0,
+  #                 0, 0, 1]
+  extrinsic_rota: [-0.814718, 0.165951, -0.555603,
+                   0.100871, 0.984124, 0.146032,
+                   0.571017, 0.062931, -0.818523]
+  #extrinsic_tran: [-0.004608, -0.02742699, -0.3741691]
+  #extrinsic_rota: [-0.9998829, -0.0081126, -0.0129716, 
+  #                 -0.0082023, 0.9999427, 0.0068751, 
+  #                  0.0129151, 0.0069807, -0.9998922]
+  # 세션은 save_path + bagname에 저장됨
+  is_save_map: 1
+  # 원본 해상도 PCD 파일 저장 (alidarState.txt와 함께 사용)
+  is_save_original_resolution: false
+  # Odometry 입력으로 다운샘플링을 건너뛰고 원본 pcl_curr 사용
+  use_full_resolution_odometry: true
+
+Odometry:
+  # Post-processed LVX125 IMU 최적화 - 매우 높은 정확도
+  cov_gyr: 0.05 #0.01
+  cov_acc: 1
+  # Post-processed IMU - bias drift 거의 없음
+  rdw_gyr: 0.0001
+  rdw_acc: 0.0001
+  # 고해상도 맵을 위한 다운샘플링 최소화
+  down_size: 0.05
+  beam_err: 0.01
+  dept_err: 0.01
+  # 고해상도 맵을 위한 작은 voxel 크기
+  voxel_size: 1.0
+  # 안정적 eigenvalue 임계값 - matching robustness
+  min_eigen_value: 0.01 #0.01
+  degrade_bound: 100
+  point_notime: 0
+  
+  # Timestamp logging settings
+  enable_timestamp_logging: false
+  timestamp_log_dir: "/media/yjcho/MT_009/data/voxel_slam/timestamp"
+  
+  # EKF timestamp logging settings
+  enable_ekf_timestamp_logging: false
+  ekf_timestamp_log_dir: "/media/yjcho/MT_009/data/voxel_slam/ekf_timestamp"
+  
+  # Raw LiDAR timestamp logging settings
+  enable_raw_timestamp_logging: false
+  raw_timestamp_log_dir: "/media/yjcho/MT_009/data/voxel_slam/raw_timestamp"
+
+LocalBA:
+  win_size: 10
+  max_layer: 2
+  cov_gyr: 0.05 #0.01
+  cov_acc: 1
+  rdw_gyr: 0.0001
+  rdw_acc: 0.0001
+  min_ba_point: 1
+  # Robustness 우선 - 과도한 constraint 억제
+  plane_eigen_value_thre: [4.0, 4.0, 4.0, 4.0]
+  # Post-processed IMU 강화된 constraint (높은 정확도 활용)
+  imu_coef: 0.01  #0.0001
+  thread_num: 6
+
+Loop:
+  # 루프 클로저를 위한 기준 - 기본 설정 복원
+  jud_default: 0.5 #0.35
+  # ICP eigenvalue 임계값 - robustness 우선
+  icp_eigval: 8 #8
+  # 드리프트 억제 - 초기 설정으로 복귀
+  ratio_drift: 0.05 #0.05
+  curr_halt: 5
+  prev_halt: 5
+  # BTC 디스크립터 생성을 위한 스캔 누적 수
+  acsize: 8
+  mgsize: 5
+  # 일반 환경 (고고도 아님)
+  isHighFly: 0
+
+GBA:
+  # Global Bundle Adjustment 파라미터 - 고해상도 맵을 위한 작은 voxel
+  voxel_size: 0.2
+  min_eigen_value: 0.01 #0.01
+  eigen_value_array: [8.0, 8.0, 8.0, 8.0]
+  total_max_iter: 5  #3

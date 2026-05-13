@@ -1,0 +1,76 @@
+General:
+  lid_topic: "/lidar/points"
+  imu_topic: "/imu/data"
+  # 저장할 맵의 파일 경로
+  save_path: "/media/yjcho/MT_009/data/voxel_slam/"
+  # 로드할 save_path의 오프라인 맵
+  # 맵 이름 뒤의 숫자는 루프의 임계값
+  # '#'는 맵이 로드되지 않음을 의미
+  previous_map: ""
+  # 이번 실행에서 재생될 백 이름
+  bagname: "sensors_xt32_2"
+  lidar_type: 3
+  blind: 0.7
+  point_filter_num: 1
+  extrinsic_tran: [0.02, 0.019, -0.32]
+  extrinsic_rota: [-0.0045378445299477654, -0.9999893437171619, 0.0008487750834373598,
+                  -0.9999887291447702, 0.004536653334194174, -0.0014001285487085678,
+                   0.0013962630302304857, -0.0008551190826922525, -0.9999986596095543]
+  # 세션은 save_path + bagname에 저장됨
+  is_save_map: 1
+
+Odometry:
+  cov_gyr: 0.01
+  cov_acc: 1
+  rdw_gyr: 0.0001
+  rdw_acc: 0.0001
+  # 실내:0.1, 실외:0.25, 고고도: 0.5
+  down_size: 0.1 # 0.2
+  dept_err: 0.01
+  beam_err: 0.01 # 0.01
+  # 실내: 0.5-1, 고속: 2, 고고도: 4
+  voxel_size: 1 # 2
+  # 평면 기준
+  min_eigen_value: 0.0025
+  # 시스템 리셋을 위한 퇴화된 스캔 수
+  degrade_bound: 100
+  # MULRAN의 경우, 포인트에 타임스탬프가 없음
+  point_notime: 0
+
+LocalBA:
+  win_size: 10
+  max_layer: 2
+  cov_gyr: 0.01
+  cov_acc: 1
+  rdw_gyr: 0.0001
+  rdw_acc: 0.0001
+  min_ba_point: 1
+  # 평면 기준
+  # plane_eigen_value_thre: [16.0, 16.0, 16.0, 16.0]
+  plane_eigen_value_thre: [1.0, 1.0, 1.0, 1.0]
+  imu_coef: 0.000025 # 0.0001
+  thread_num: 5
+
+Loop:
+  # 루프 클로저를 위한 기준
+  # 환경에 따라 조정할 수 있음
+  jud_default: 0.5 # 0.22 0.34
+  # 두 스캔 매칭의 성공을 보장하기 위한 ICP 기준
+  icp_eigval: 10 # 8
+  # 드리프트와 이동 거리 비율의 임계값
+  ratio_drift: 0.01
+  curr_halt: 10
+  prev_halt: 10
+  # 이전 맵에서 BTC 디스크립터 생성을 위해 acsize 스캔 누적
+  acsize: 10
+  mgsize: 5
+  # 일반 및 고고도 환경에서 BTC의 매개변수는 다름
+  isHighFly: 0
+
+GBA:
+  # GBA는 거칠게서 세밀하게 전략을 사용
+  # 이것들은 거친 매개변수들
+  voxel_size: 1
+  min_eigen_value: 0.01
+  eigen_value_array: [2.0, 2.0, 2.0, 2.0]
+  total_max_iter: 3

@@ -1,0 +1,65 @@
+General:
+  lid_topic: "/livox/lidar"
+  imu_topic: "/livox/imu"
+  # 저장할 맵의 파일 경로
+  save_path: "/home/mt-dhpyo-ubuntu/Data/map_storage/mappingtool_v2_data/open_dataset/"
+  # 로드할 save_path의 오프라인 맵
+  # '#'는 맵이 로드되지 않음을 의미
+  previous_map: ""
+  bagname: "compus_elevator"
+  lidar_type: 0
+  blind: 0.5 # 0.5
+  point_filter_num: 3
+  extrinsic_tran: [0.04165, 0.02326, -0.0284]
+  extrinsic_rota: [1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+  # 세션은 save_path + bagname에 저장됨
+  is_save_map: 0
+
+Odometry:
+  cov_gyr: 0.1
+  cov_acc: 1
+  rdw_gyr: 0.0001
+  rdw_acc: 0.0001
+  # 실내:0.1, 실외:0.25, 고고도: 0.5
+  down_size: 0.1
+  dept_err: 0.02
+  beam_err: 0.05
+  # 실내: 0.5-1, 고속: 2, 고고도: 4
+  voxel_size: 1
+  min_eigen_value: 0.0025
+  # 시스템 리셋을 위한 퇴화된 스캔 수
+  degrade_bound: 10
+  point_notime: 0
+
+LocalBA:
+  win_size: 10
+  max_layer: 2
+  cov_gyr: 0.01
+  cov_acc: 1
+  rdw_gyr: 0.0001
+  rdw_acc: 0.0001
+  min_ba_point: 1
+  # 평면 기준
+  plane_eigen_value_thre: [4.0, 4.0, 4.0, 4.0]
+  imu_coef: 0.0001
+  thread_num: 5
+
+Loop:
+  jud_default: 0.5
+  icp_eigval: 10
+  ratio_drift: 0.01
+  curr_halt: 10
+  prev_halt: 10
+  acsize: 2
+  mgsize: 2
+  isHighFly: 0
+
+GBA:
+  # GBA는 거칠게서 세밀하게 전략을 사용
+  # 이것들은 거친 매개변수들
+  voxel_size: 2
+  min_eigen_value: 0.1
+  eigen_value_array: [4.0, 4.0, 4.0, 4.0]
+  total_max_iter: 6
